@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import logo from "../assets/logo.png";
 
 export default function Navbar() {
   const { auth, logout } = useContext(AuthContext);
@@ -22,7 +23,7 @@ export default function Navbar() {
                           flex items-center justify-center overflow-hidden group-hover:scale-105 
                           transition-transform">
             <img
-              src="/src/assets/logo.png"
+              src={logo}
               alt="SmartAgri Logo"
               className="w-full h-full"
             />
