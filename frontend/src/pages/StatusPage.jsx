@@ -1,70 +1,8 @@
-// import React, { useEffect, useState } from 'react';
-// import { api } from '../api';
-
-// export default function StatusPage() {
-//   const [requests, setRequests] = useState([]);
-//   const [err, setErr] = useState('');
-
-//   useEffect(() => {
-//     (async () => {
-//       try {
-//         const { data } = await api.get('/requests/me');
-//         setRequests(data);
-//       } catch (e) {
-//         setErr(e.response?.data?.msg || 'Could not fetch requests');
-//       }
-//     })();
-//   }, []);
-
-//   return (
-//     <div className="container-max mt-8">
-//       <div className="card">
-//         <h2 className="text-xl font-semibold">My Requests</h2>
-
-//         {err && <div className="mt-3 text-sm text-red-600">{err}</div>}
-
-//         <div className="mt-4 overflow-x-auto">
-//           <table className="w-full table-auto">
-//             <thead className="text-left text-sm text-gray-600">
-//               <tr>
-//                 <th className="pb-2">Date</th>
-//                 <th className="pb-2">Area</th>
-//                 <th className="pb-2">Power (kW)</th>
-//                 <th className="pb-2">Purpose</th>
-//                 <th className="pb-2">Status</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {requests.map(r => (
-//                 <tr key={r._id} className="border-t">
-//                   <td className="py-3 text-sm">{new Date(r.requestDate).toLocaleString()}</td>
-//                   <td className="py-3 text-sm">{r.area}</td>
-//                   <td className="py-3 text-sm">{r.powerRequired}</td>
-//                   <td className="py-3 text-sm">{r.purpose || '-'}</td>
-//                   <td className="py-3 text-sm">
-//                     <span className={
-//                       r.status === 'Pending' ? 'px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs' :
-//                       r.status === 'Approved' ? 'px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs' :
-//                       'px-2 py-1 rounded-full bg-red-100 text-red-700 text-xs'
-//                     }>{r.status}</span>
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-
-//           {requests.length === 0 && <div className="mt-4 text-sm text-gray-500">No requests yet.</div>}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
 import React, { useEffect, useState } from "react";
 import { api } from "../api";
+import { Link } from "react-router-dom";
+import Button from "../components/Button";
+import { Clock, CheckCircle2, XCircle, AlertCircle, FileText, Calendar, Zap, ArrowRight } from "lucide-react";
 
 export default function StatusPage() {
   const [requests, setRequests] = useState([]);
@@ -86,49 +24,98 @@ export default function StatusPage() {
     })();
   }, []);
 
-  return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">My Requests</h1>
-        <p className="text-sm text-gray-500 mt-1">Track progress of your power requests</p>
-      </div>
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Approved': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+      case 'Rejected': return 'bg-red-100 text-red-700 border-red-200';
+      default: return 'bg-amber-100 text-amber-700 border-amber-200';
+    }
+  };
 
-      {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'Approved': return <CheckCircle2 size={16} />;
+      case 'Rejected': return <XCircle size={16} />;
+      default: return <Clock size={16} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-serif font-bold text-slate-900">Request Status</h1>
+            <p className="text-slate-600 mt-1">Track and manage your power allocation requests.</p>
+          </div>
+          <Link to="/request">
+            <Button>
+              New Request <ArrowRight size={16} className="ml-2" />
+            </Button>
+          </Link>
         </div>
-      ) : err ? (
-        <div className="p-4 bg-red-50 text-red-700 rounded">{err}</div>
-      ) : requests.length === 0 ? (
-        <div className="p-6 bg-white rounded shadow text-gray-600">You have no requests yet. Submit one from the Request Power page.</div>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {requests.map((r) => (
-            <div key={r._id} className="bg-white shadow rounded-lg p-5 border border-gray-100">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{r.area}</h3>
-                  <p className="text-sm text-gray-500 mt-1">{new Date(r.createdAt || r.requestDate).toLocaleString()}</p>
-                </div>
-                <div>
-                  <span className={
-                    r.status === "Approved" ? "inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"
-                    : r.status === "Rejected" ? "inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800"
-                    : "inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800"
-                  }>
+
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+            <p className="mt-4 text-slate-500 font-medium">Loading requests...</p>
+          </div>
+        ) : err ? (
+          <div className="p-6 bg-red-50 rounded-2xl border border-red-100 flex items-center gap-4 text-red-700">
+            <AlertCircle size={24} />
+            <span className="font-medium">{err}</span>
+          </div>
+        ) : requests.length === 0 ? (
+          <div className="bg-white rounded-3xl p-12 text-center border border-slate-100 shadow-sm">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FileText size={32} className="text-slate-400" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">No Requests Found</h3>
+            <p className="text-slate-500 mb-8 max-w-sm mx-auto">
+              You haven't submitted any power allocation requests yet. Create one to get started.
+            </p>
+            <Link to="/request">
+              <Button>Create Your First Request</Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {requests.map((r) => (
+              <div key={r._id} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1.5 ${getStatusColor(r.status)}`}>
+                    {getStatusIcon(r.status)}
                     {r.status}
+                  </div>
+                  <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
+                    <Calendar size={12} />
+                    {new Date(r.createdAt || r.requestDate).toLocaleDateString()}
                   </span>
                 </div>
-              </div>
 
-              <div className="mt-4">
-                <p className="text-sm text-gray-700"><span className="font-medium">Power:</span> {r.powerRequired} kW</p>
-                <p className="text-sm text-gray-600 mt-2">{r.purpose || "No purpose provided"}</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">{r.area}</h3>
+                <div className="flex items-center gap-1 text-slate-500 text-sm mb-4">
+                  <Zap size={14} className="text-amber-500" />
+                  <span className="font-medium text-slate-700">{r.powerRequired} kW</span> Requested
+                </div>
+
+                <div className="bg-slate-50 rounded-xl p-4 mb-4 flex-grow">
+                  <p className="text-sm text-slate-600 line-clamp-3">
+                    {r.purpose || "No specific purpose provided."}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+                  <span className="text-xs text-slate-400">ID: {r._id.slice(-6).toUpperCase()}</span>
+                  <button className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+                    View Details
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

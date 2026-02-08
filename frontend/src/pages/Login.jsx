@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
 import { api } from "../api";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import Button from "../components/Button";
+import { Sprout, Mail, Lock, ArrowRight } from "lucide-react";
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -30,90 +32,97 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-green-200 to-green-300 px-4">
-      {/* Card */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-green-300">
-        
-        {/* Logo Circle */}
-        <div className="w-16 h-16 mx-auto bg-green-600 rounded-full flex items-center justify-center shadow-md mb-4">
-          <span className="text-white text-3xl font-bold">⚡</span>
-        </div>
-
-        <h2 className="text-3xl font-bold text-center text-green-700">
-          Power Distribution Agriculture
-        </h2>
-        <p className="text-center text-gray-600 mt-1 text-sm">
-          Login to access your dashboard
-        </p>
-
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-          
-          {/* Email */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 
-              focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 
-              transition"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 
-              focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 
-              transition"
-            />
-          </div>
-
-          {/* Error */}
-          {err && (
-            <div className="text-sm text-red-600 bg-red-100 px-3 py-2 rounded">
-              {err}
+    <div className="min-h-[calc(100vh-64px)] flex bg-white">
+      {/* Left Side - Image */}
+      <div className="hidden lg:flex w-1/2 relative bg-slate-900 overflow-hidden">
+        <img
+          src="https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg"
+          alt="Agriculture Field"
+          className="absolute inset-0 w-full h-full object-cover opacity-90"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+        <div className="relative z-10 p-16 flex flex-col justify-end h-full text-white">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+              <Sprout size={24} className="text-white" />
             </div>
-          )}
+            <span className="text-2xl font-bold drop-shadow-2xl">SmartAgri</span>
+          </div>
+          <h2 className="text-4xl font-serif font-bold mb-4 leading-tight drop-shadow-2xl text-white">
+            Empowering Farmers with <br /> <span className="text-emerald-400">Smart Energy</span>
+          </h2>
+          <p className="text-lg text-slate-100 max-w-md drop-shadow-2xl font-semibold">
+            Join thousands of farmers optimizing their irrigation with our intelligent power distribution system.
+          </p>
+        </div>
+      </div>
 
-          {/* Buttons */}
-          <div className="flex items-center justify-between mt-4">
-            <button
+      {/* Right Side - Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-slate-50">
+        <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-slate-900 mb-2 font-serif">Welcome Back</h2>
+            <p className="text-slate-500">Please enter your details to sign in</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="name@company.com"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                />
+              </div>
+            </div>
+
+            {err && (
+              <div className="p-3 rounded-lg bg-red-50 text-red-600 text-sm border border-red-100">
+                {err}
+              </div>
+            )}
+
+            <Button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg 
-              shadow-md transition disabled:bg-green-400"
+              className="w-full py-3 flex items-center justify-center gap-2 group"
             >
-              {loading ? "Signing in..." : "Login"}
-            </button>
+              {loading ? "Signing in..." : "Sign in"}
+              {!loading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
+            </Button>
 
-            <button
-              type="button"
-              onClick={() => nav("/register")}
-              className="text-sm text-green-700 hover:underline"
-            >
-              Register
-            </button>
-          </div>
-        </form>
-
-        {/* footer */}
-        <p className="text-center text-xs text-gray-500 mt-6">
-          Secure access • Agriculture Power Request System
-        </p>
+            <div className="text-center mt-6">
+              <p className="text-sm text-slate-600">
+                Don't have an account?{' '}
+                <Link to="/register" className="text-green-600 font-semibold hover:text-green-700 hover:underline">
+                  Create account
+                </Link>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
