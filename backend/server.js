@@ -20,4 +20,8 @@ app.use('/api/requests', requestRoutes);
 
 app.get('/', (req, res) => res.send('Power Distribution API running'));
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;
