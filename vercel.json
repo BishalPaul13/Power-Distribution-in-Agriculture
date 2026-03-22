@@ -13,18 +13,14 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/backend/server.js"
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/(?!api)(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(?!api).*",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
     }
   ],
   "outputDirectory": "frontend/dist"
