@@ -45,4 +45,14 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const getAllFarmers = async (req, res) => {
+  try {
+    const farmers = await User.find({ role: 'farmer' }).select('-password');
+    res.json(farmers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+};
+
+module.exports = { register, login, getAllFarmers };
